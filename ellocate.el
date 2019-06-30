@@ -18,6 +18,10 @@
   :type 'list
   :group 'exwm-edit)
 
+(defvar ellocate-gc-mem 80000000
+  "The amount of memory ellocate sets before running a search to avoid
+multiple garbage collections. If nil don't modify `gc-cons-threshold'")
+
 (defvar ellocate-scan-cache '()
   "The variable where the cache is stored.")
 
@@ -60,7 +64,10 @@
 (defun ellocate ()
   "Displays any files below the current dir."
   (interactive)
-  (let* ((gc-cons-threshold 80000000)
+  (let* ((gc-cons-threshold
+	  (if ellocate-gc-mem
+	      ellocate-gc-mem
+	    gc-cons-threshold))
 	 ;; Load data from cached search corresponding to this default-directory
 	 (search
 	  (nth 1
