@@ -59,7 +59,6 @@ multiple garbage collections. If nil don't modify `gc-cons-threshold'")
 					   results
 					   "\n")))))
 
-;; TODO: Error if user is outside scope defined by ellocate-scan-dirs
 ;; TODO: Add command to search entire scan dir, i.e. ignore predicate here
 ;;;###autoload
 (defun ellocate ()
