@@ -13,7 +13,7 @@
 ;;; Code:
 (require 's)
 
-(defcustom ellocate-scan-dirs '(("~/" "~/find-home"))
+(defcustom ellocate-scan-dirs '(("~/" "~/ellocate-home-db"))
   "An list of elements (path database-location)."
   :type 'list
   :group 'exwm-edit)
