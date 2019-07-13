@@ -13,7 +13,7 @@
 ;;; Code:
 (require 's)
 
-(defcustom ellocate-scan-dirs '(("~/find-home" "~/"))
+(defcustom ellocate-scan-dirs '(("~/" "~/find-home"))
   "An list of elements (path database-location)."
   :type 'list
   :group 'exwm-edit)
@@ -91,9 +91,12 @@ multiple garbage collections. If nil don't modify `gc-cons-threshold'")
 		      ;; Don't sort for better performance, find should already have sorted them anyway
 		      :sort nil)))
 
-      (ellocate-cache-dir
-       (cl-find-if (lambda (list)
-		     (file-in-directory-p (expand-file-name default-directory) (nth 0 list))) ellocate-scan-dirs))
+      (let ((found-dir (cl-find-if
+			(lambda (list)
+			  (file-in-directory-p (expand-file-name default-directory) (nth 0 list))) ellocate-scan-dirs)))
+	(if found-dir
+	    (ellocate-cache-dir found-dir)
+	  (message "Could not search: the current directory is outside of any directories listed in ellocate-scan-dirs")))
       (ellocate))))
 
 (provide 'ellocate)
