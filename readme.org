@@ -1,4 +1,4 @@
-Ellocate is a re-implementation of locate written in Emacs-Lisp
+Ellocate is a re-implementation of locate written in Emacs-Lisp.
 Currently this package requires =ivy= for searching, but it shouldn't be too hard to modify it to work with helm or ido
 
 * Comparison
