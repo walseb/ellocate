@@ -1,10 +1,4 @@
-12
-
-| Dependencies                                                | Find       | mlocate or GNU locate                                     | Find                                         |
-
-13
-
-| Tramp support                                               | I think so | Yes                                                       | Yes                                          |USB2USB2Ellocate is a re-implementation of locate written in Emacs-Lisp
+Ellocate is a re-implementation of locate written in Emacs-Lisp
 Currently this package requires =ivy= for searching, but it shouldn't be too hard to modify it to work with helm or ido
 
 * Comparison
