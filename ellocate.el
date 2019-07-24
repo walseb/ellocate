@@ -1,4 +1,4 @@
-;;; ellocate.el --- Find a file using emacs with the speed of locate -*- lexical-binding: t -*-
+;;; ellocate.el --- The locate command reimplemented in Emacs Lisp -*- lexical-binding: t -*-
 
 ;; Author: Sebastian Wålinder <s.walinder@gmail.com>
 ;; URL: https://github.com/walseb/ellocate
@@ -8,91 +8,107 @@
 
 ;;; Commentary:
 
-;; Todo
+;; This package is a re-implementation of locate written in Emacs Lisp.
+;; It recursively searches directories using the find command and then stores the
+;; results in the database file specified in `ellocate-scan-dir'.
+
+;; The function `ellocate' scans the directory as specified by `ellocate-scan-dirs'
+;; and creates a database file to store the results in.
+;; `ellocate-clear' clears all stored databases.
+;; This forces `ellocate' to refresh its search entries. Do this if your
+;; file-system has changed and you want that reflected in `ellocate'.
 
 ;;; Code:
 (require 's)
+(require 'ivy)
 
 (defcustom ellocate-scan-dirs '(("~/" "~/ellocate-home-db"))
-  "An list of elements (path database-location)."
+  "An list of elements in this format: '(path database-location).
+If the database field is nil, ellocate will not save the database to
+disk, but just store it in ram."
   :type 'list
-  :group 'exwm-edit)
+  :group 'ellocate)
 
 (defvar ellocate-gc-mem 80000000
   "The amount of memory ellocate sets before running a search to avoid
 multiple garbage collections. If nil don't modify `gc-cons-threshold'")
 
 (defvar ellocate-scan-cache '()
-  "The variable where the cache is stored.")
+  "The variable where caches are stored inside Emacs for quick access.
+Used to display the ellocate prompt quickly.")
 
-(defvar ellocate-databas-coding-system 'utf-8
+(defvar ellocate-database-coding-system 'utf-8
   "The coding system used by the database file.")
 
 ;; This PWD might be a problem https://stackoverflow.com/questions/246215/how-can-i-generate-a-list-of-files-with-their-absolute-path-in-linux
 (defvar ellocate-find-command "find \"$PWD\" -name '.git' -prune -o -type f -print"
   "Find command used to build the cache.")
 
-(defun ellocate-reset ()
-  "Cleans all caches so that next time you run ellocate you will need to rebuild the cache."
+;;;###autoload
+(defun ellocate-clear ()
+  "Cleans all caches defined in `ellocate-scan-dirs'.
+Next time you run ellocate you will need to rebuild the cache.
+Run this if your file system has changed and you want ellocate to find your new files."
   (interactive)
   (setq ellocate-scan-cache nil)
-  (mapc (lambda (list) (delete-file (nth 1 list))) ellocate-scan-dirs))
+  (mapc (lambda (list)
+	  (when (nth 1 list)
+	    (delete-file (nth 1 list))))
+	ellocate-scan-dirs))
 
-;; TODO: Add option to compress the files saved with tar, this reduces the file size by like 99% and doesn't take any time (and only has to be done while loading the file into the elisp list)
 (defun ellocate-cache-dir (list)
   "Caches directory in LIST to database also in LIST."
   (let* ((default-directory (expand-file-name (nth 0 list)))
-	 (cache (expand-file-name (nth 1 list)))
-	 (results (if (file-exists-p cache)
-		      (f-read cache)
-		    (shell-command-to-string ellocate-find-command))))
+	 (cache (ignore-errors (expand-file-name (nth 1 list))))
+	 (candidates (if (and cache (file-exists-p cache))
+			 (f-read cache)
+		       (shell-command-to-string ellocate-find-command))))
 
-    (when (not (file-exists-p cache))
+    ;; Write cache to file
+    (when (and cache (not (file-exists-p cache)))
       (let ((coding-system-for-write (if coding-system-for-write
 					 coding-system-for-write
-				       ellocate-databas-coding-system)))
-	(write-region results nil cache)))
+				       ellocate-database-coding-system)))
+	(write-region rcandidatesnil cache)))
 
-    ;; Cache
+    ;; Store the cache in Emacs as a variable
     (add-to-list 'ellocate-scan-cache `(,default-directory
 					 ,(split-string
-					   results
+					   candidates
 					   "\n")))))
 
-;; TODO: Add command to search entire scan dir, i.e. ignore predicate here
 ;;;###autoload
-(defun ellocate ()
-  "Displays any files below the current dir."
-  (interactive)
-  (let* ((gc-cons-threshold
-	  (if ellocate-gc-mem
-	      ellocate-gc-mem
-	    gc-cons-threshold))
+(defun ellocate (&optional ignore-scope)
+  "Displays any files below the current dir.
+If IGNORE-SCOPE is non-nil, search the entire database instead of just every
+file under the current directory."
+  (interactive "P")
+  (let* ((gc-cons-threshold (if ellocate-gc-mem
+				ellocate-gc-mem
+			      gc-cons-threshold))
 	 ;; Load data from cached search corresponding to this default-directory
 	 (search
-	  (nth 1
-	       (cl-find-if (lambda (list)
-			     (file-in-directory-p
-			      default-directory (nth 0 list)))
-			   ellocate-scan-cache))))
-
+	  (nth 1 (cl-find-if (lambda (list)
+			       (file-in-directory-p
+				default-directory (nth 0 list)))
+			     ellocate-scan-cache))))
     (if search
 	(let* ((dir (expand-file-name default-directory))
 	       (dir-length (length dir)))
 	  (find-file (ivy-read
 		      "Find: "
 		      search
-
-		      ;; Predicate is slightly faster than using seq-filter somehow
-		      :predicate (lambda (string) (s-starts-with-p dir string))
-		      ;; We can't have initial input because if the path contains capital letters, we have to use capital letters in the search. Also if we just lower case the search we will get a bad path if we choose to use capital letters in the search
-		      ;;:initial-input (concat "^" (expand-file-name default-directory))
+		      ;; Predicate is slightly faster than using seq-filter over the candidates somehow
+		      :predicate (lambda (string) (if ignore-scope
+						 t
+					       (s-starts-with-p dir string)))
 		      ;; Don't sort for better performance, find should already have sorted them anyway
 		      :sort nil)))
 
       (let ((found-dir (cl-find-if
 			(lambda (list)
-			  (file-in-directory-p (expand-file-name default-directory) (nth 0 list))) ellocate-scan-dirs)))
+			  (file-in-directory-p (expand-file-name default-directory) (nth 0 list)))
+			ellocate-scan-dirs)))
 	(if found-dir
 	    (ellocate-cache-dir found-dir)
 	  (message "Could not search: the current directory is outside of any directories listed in ellocate-scan-dirs")))
