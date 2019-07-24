@@ -1,4 +1,4 @@
-Ellocate is a re-implementation of locate written in Emacs-Lisp
+USB2USB2Ellocate is a re-implementation of locate written in Emacs-Lisp
 Currently this package requires =ivy= for searching, but it shouldn't be too hard to modify it to work with helm or ido
 
 * Comparison
@@ -17,11 +17,13 @@ The function =ellocate= scans the directory as specified by =ellocate-scan-dirs=
 =ellocate-scan-dirs= is configured like this:
 #+BEGIN_SRC emacs-lisp
 (setq ellocate-scan-dirs '(("~/" "~/ellocate-home-db")
-                           ("/dev/USB" "~/ellocate-usb-drive-db")
+                           ("/mnt/USB" "~/ellocate-usb-drive-db")
                            ;; I want this directory to be re-scanned on first search after every emacs restart by not creating a database file for it
-                           ("/dev/USB2" nil)
+                           ("/mnt/USB2" nil)
                            ;; Never make your scan paths overlap like this:
-                           ;; ("/dev/USB2/newFolder" nil)
+                           ;; ("/mnt/USB2/newFolder" nil)
+                           ;; This is pretty useful if you have many USB devices, but remember to not overlap like this would if it wasn't commented (because the subdirectory /mnt/USB is also scanned as defined above)
+                           ("/mnt/" nil)
                            ))
 #+END_SRC
 Where the first element in the list is the directory to scan and the second is in which file to store the search results so that =ellocate= can read read it if Emacs is restarted to give =ellocate= faster initial startup times. If the database is nil, =ellocate= will have to re-scan the directory if run every time Emacs is restarted instead of just reading a database containing the scanned files.
