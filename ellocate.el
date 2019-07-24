@@ -43,8 +43,9 @@ disk, but just store it in ram."
   :group 'ellocate)
 
 (defvar ellocate-gc-mem 80000000
-  "The amount of memory ellocate sets before running a search to avoid
-multiple garbage collections. If nil don't modify `gc-cons-threshold'")
+  "GC limit to set before running ellocate.
+Set before running ellocate to avoid multiple garbage collections. If nil
+don't modify `gc-cons-threshold'")
 
 (defvar ellocate-scan-cache '()
   "The variable where caches are stored inside Emacs for quick access.
