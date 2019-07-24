@@ -1,6 +1,12 @@
-* Todo
-Readme
-Compress databases
-License
-Documentation
-Cleanup
+Ellocate is a re-implementation of locate written in Emacs-Lisp
+Currently this package requires =ivy= for searching, but it shouldn't be too hard to modify it to work with helm or ido
+
+#+caption: Comparison with other file searchers
+|                                                             | Ellocate   | Locate (and elisp wrappers like counsel-locate)           | Find (and elisp wrappers like counsel-find)  |
+|-------------------------------------------------------------+------------+-----------------------------------------------------------+----------------------------------------------|
+| Speed                                                       | Fast       | Fast                                                      | Slow                                         |
+| Easy to configure multiple search paths                     | Yes        | No                                                        | Yes (always searches down current directory) |
+| Switch search databases used depending on current directory | Yes        | With a lot of effort                                      | N/A                                          |
+| Works the same on every platform                            | Yes        | No (Some systems use mlocate while others use GNU locate) | Yes                                          |
+| Dependencies                                                | Find       | Mlocate or GNU locate                                     | Find                                         |
+| Tramp support                                               | I think so | Yes                                                       | Yes                                          |
