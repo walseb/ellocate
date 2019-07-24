@@ -8,5 +8,5 @@ Currently this package requires =ivy= for searching, but it shouldn't be too har
 | Easy to configure multiple search paths                     | Yes        | No                                                        | Yes (always searches down current directory) |
 | Switch search databases used depending on current directory | Yes        | With a lot of effort                                      | N/A                                          |
 | Works the same on every platform                            | Yes        | No (Some systems use mlocate while others use GNU locate) | Yes                                          |
-| Dependencies                                                | Find       | Mlocate or GNU locate                                     | Find                                         |
+| Dependencies                                                | Find       | mlocate or GNU locate                                     | Find                                         |
 | Tramp support                                               | I think so | Yes                                                       | Yes                                          |
