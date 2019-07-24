@@ -106,8 +106,7 @@ file under the current directory."
 				default-directory (nth 0 list)))
 			     ellocate-scan-cache))))
     (if search
-	(let* ((dir (expand-file-name default-directory))
-	       (dir-length (length dir)))
+	(let ((dir (expand-file-name default-directory)))
 	  (find-file (ivy-read
 		      "Find: "
 		      search
