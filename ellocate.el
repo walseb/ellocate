@@ -69,7 +69,7 @@ Run this if your file system has changed and you want ellocate to find your new 
       (let ((coding-system-for-write (if coding-system-for-write
 					 coding-system-for-write
 				       ellocate-database-coding-system)))
-	(write-region rcandidatesnil cache)))
+	(write-region candidates cache)))
 
     ;; Store the cache in Emacs as a variable
     (add-to-list 'ellocate-scan-cache `(,default-directory
