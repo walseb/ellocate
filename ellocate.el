@@ -90,9 +90,8 @@ Run this if your file system has changed and you want ellocate to find your new 
 
     ;; Write cache to file
     (when (and cache (not (file-exists-p cache)))
-      (let ((coding-system-for-write (if coding-system-for-write
-					 coding-system-for-write
-				       ellocate-database-coding-system)))
+      (let ((coding-system-for-write (or coding-system-for-write
+                                         ellocate-database-coding-system)))
 	(write-region candidates nil cache)))
 
     ;; Store the cache in Emacs as a variable
@@ -107,9 +106,7 @@ Run this if your file system has changed and you want ellocate to find your new 
 If IGNORE-SCOPE is non-nil, search the entire database instead of just every
 file under the current directory."
   (interactive "P")
-  (let* ((gc-cons-threshold (if ellocate-gc-mem
-				ellocate-gc-mem
-			      gc-cons-threshold))
+  (let* ((gc-cons-threshold (or ellocate-gc-mem gc-cons-threshold))
 	 ;; Load data from cached search corresponding to this default-directory
 	 (search
 	  (nth 1 (cl-find-if (lambda (list)
@@ -122,9 +119,7 @@ file under the current directory."
 		      "Find: "
 		      search
 		      ;; Predicate is slightly faster than using seq-filter over the candidates somehow
-		      :predicate (lambda (string) (if ignore-scope
-						 t
-					       (s-starts-with-p dir string)))
+		      :predicate (lambda (string) (or ignore-scope (s-starts-with-p dir string)))
 		      ;; Don't sort for better performance, find should already have sorted them anyway
 		      :sort nil)))
 
