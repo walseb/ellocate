@@ -11,6 +11,8 @@ Ellocate is a re-implementation of locate written in Emacs-Lisp. It supports all
 | Dependencies                                                | Find       | mlocate or GNU locate                                     | Find                                         |
 | Tramp support                                               | I think so | Yes                                                       | Yes                                          |
 
+#+html: <img src="preview.png" alt="Ellocate search"/>
+
 * Usage
 The function =ellocate= scans the directory as specified by =ellocate-scan-dirs= and creates a database file to store the results in.
 By default =ellocate= only searches all directories below the current directory. To search all files in the current database either run =ellocate-all= or run =ellocate= with a universal argument
