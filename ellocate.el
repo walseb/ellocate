@@ -37,11 +37,17 @@
 (require 'ivy)
 (require 'cl-lib)
 
-(defcustom ellocate-scan-dirs '(("~/" "~/ellocate-home-db"))
+(defgroup ellocate nil
+  "The locate command reimplemented in Emacs Lisp."
+  :prefix "ellocate-"
+  :group 'external
+  :link '(url-link :tag "GitHub" "https://github.com/walseb/ellocate"))
+
+(defcustom ellocate-scan-dirs '("~/" "~/ellocate-home-db")
   "An list of elements in this format: '(path database-location).
 If the database field is nil, ellocate will not save the database to
 disk, but just store it in ram."
-  :type 'list
+  :type '(repeat string)
   :group 'ellocate)
 
 (defvar ellocate-gc-mem 80000000
