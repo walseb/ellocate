@@ -44,7 +44,7 @@
   :link '(url-link :tag "GitHub" "https://github.com/walseb/ellocate"))
 
 (defcustom ellocate-scan-dirs '("~/" "~/ellocate-home-db")
-  "An list of elements in this format: '(path database-location).
+  "A list of elements in this format: '(path database-location).
 If the database field is nil, ellocate will not save the database to
 disk, but just store it in ram."
   :type '(repeat string)
@@ -69,7 +69,7 @@ Used to display the ellocate prompt quickly.")
 ;;;###autoload
 (defun ellocate-clear ()
   "Cleans all caches defined in `ellocate-scan-dirs'.
-Next time you run ellocate you will need to rebuild the cache.
+Next time you run `ellocate' you will need to rebuild the cache.
 Run this if your file system has changed and you want ellocate to find your new files."
   (interactive)
   (setq ellocate-scan-cache nil)
