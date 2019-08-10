@@ -125,7 +125,16 @@ file under the current directory."
 	(if found-dir
 	    (ellocate-cache-dir found-dir)
 	  (message "Could not search: the current directory is outside of any directories listed in ellocate-scan-dirs")))
+      ;; Re-run ellocate on the newly found files
       (ellocate))))
+
+;;;###autoload
+(defun ellocate-all ()
+  "Find all files in current database.
+This can also be done by running ellocate with a universal argument
+but I figured it would be good to make it more explicit."
+  (interactive)
+  (ellocate t))
 
 (defun ellocate-completing-read (dir candidates ignore-scope)
   "Run completing read on CANDIDATES without sorting.
