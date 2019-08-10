@@ -35,6 +35,7 @@
 (require 's)
 (require 'f)
 (require 'ivy)
+(require 'cl-lib)
 
 (defcustom ellocate-scan-dirs '(("~/" "~/ellocate-home-db"))
   "An list of elements in this format: '(path database-location).
