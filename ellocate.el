@@ -43,8 +43,10 @@
   :group 'external
   :link '(url-link :tag "GitHub" "https://github.com/walseb/ellocate"))
 
-(defcustom ellocate-scan-dirs '(("~/" "~/ellocate-home-db"))
-  "A list of elements in this format: '(path database-location).
+(defcustom ellocate-scan-dirs '(("~/" "~/ellocate-home-db")
+				("/mnt/" nil))
+  "A list of lists in this format:
+'((path database-location) (path2 database-location2)).
 If the database field is nil, ellocate will not save the database to
 disk, but just store it in ram."
   :type 'sexp
