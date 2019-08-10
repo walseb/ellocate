@@ -115,13 +115,8 @@ file under the current directory."
 			     ellocate-scan-cache))))
     (if search
 	(let ((dir (expand-file-name default-directory)))
-	  (find-file (ivy-read
-		      "Find: "
-		      search
-		      ;; Predicate is slightly faster than using seq-filter over the candidates somehow
-		      :predicate (lambda (string) (or ignore-scope (s-starts-with-p dir string)))
-		      ;; Don't sort for better performance, find should already have sorted them anyway
-		      :sort nil)))
+	  (find-file
+	   (ellocate-completing-read dir search ignore-scope)))
 
       (let ((found-dir (cl-find-if
 			(lambda (list)
@@ -131,6 +126,24 @@ file under the current directory."
 	    (ellocate-cache-dir found-dir)
 	  (message "Could not search: the current directory is outside of any directories listed in ellocate-scan-dirs")))
       (ellocate))))
+
+(defun ellocate-completing-read (dir candidates ignore-scope)
+  "Run completing read on CANDIDATES without sorting.
+Only candidates inside DIR are shown if IGNORE-SCOPE is nil."
+  (let* ((presorted-completions
+	  (if ignore-scope
+	      candidates
+	    (seq-filter (lambda (string) (s-starts-with-p dir string)) candidates)))
+	 (completion-table
+	  ;; Don't give up here! What this lambda does is described here:
+	  ;; https://emacs.stackexchange.com/questions/41801/how-to-stop-completing-read-ivy-completing-read-from-sorting?rq=1
+	  (lambda (string pred action)
+	    (if (eq action 'metadata)
+		'(metadata (display-sort-function . identity)
+			   (cycle-sort-function . identity))
+	      (complete-with-action
+	       action presorted-completions string pred)))))
+    (completing-read "Find: " completion-table)))
 
 (provide 'ellocate)
 
