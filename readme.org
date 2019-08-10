@@ -13,7 +13,7 @@ Ellocate is a re-implementation of locate written in Emacs-Lisp. It supports eve
 
 * Usage
 The function =ellocate= scans the directory as specified by =ellocate-scan-dirs= and creates a database file to store the results in.
-By default ellocate only searches all directories below the current directory. To search all files in the current database either run =ellocate-all= or run =ellocate= with a universal argument
+By default =ellocate= only searches all directories below the current directory. To search all files in the current database either run =ellocate-all= or run =ellocate= with a universal argument
 =ellocate-scan-dirs= is configured like this:
 #+BEGIN_SRC emacs-lisp
 (setq ellocate-scan-dirs '(("~/" "~/ellocate-home-db")
