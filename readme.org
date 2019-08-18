@@ -1,3 +1,5 @@
+[[https://melpa.org/#/ellocate][file:https://melpa.org/packages/ellocate-badge.svg]]
+
 Ellocate is a re-implementation of locate written in Emacs-Lisp. It supports all completion backends (ivy, helm, ido, etc)
 
 * Comparison
