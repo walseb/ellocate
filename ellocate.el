@@ -68,7 +68,7 @@ Used to display the ellocate prompt quickly.")
   "Find command used to build the cache.")
 
 ;;;###autoload
-(defun ellocate-clear ()
+(defun ellocate-clear-all ()
   "Cleans all caches defined in `ellocate-scan-dirs'.
 Next time you run `ellocate' you will need to rebuild the cache.
 Run this if your file system has changed and you want ellocate to find your new files."
@@ -78,6 +78,37 @@ Run this if your file system has changed and you want ellocate to find your new 
 	  (when (nth 1 list)
 	    (delete-file (nth 1 list))))
 	ellocate-scan-dirs))
+
+(defun ellocate-clear (&optional ignore-scope)
+  "Clears the cache corresponding to your current directory.
+If IGNORE-SCOPE is non-nil, clear all caches instead of just the cache
+corresponding to your current directory.
+
+Next time you run `ellocate' in this directory it will need to
+rebuild the cache.
+Run this function if your file system has changed and you want `ellocate' to find your new files."
+  (interactive "P")
+  (if ignore-scope
+      (ellocate-clear-all)
+    ;; Clear cache
+    (setq ellocate-scan-cache
+	  (seq-remove (lambda (list)
+			(let* ((path-name (nth 0 list))
+			       (db-name (nth 1 list)))
+			  (if (and db-name (file-in-directory-p default-directory path-name))
+			      t
+			    nil)))
+		      ellocate-scan-cache))
+
+    ;; Clear databases on disk
+    (mapc (lambda (list)
+	    (let* ((path-name (nth 0 list))
+		   (db-name (nth 1 list)))
+	      (when (and db-name (file-in-directory-p default-directory path-name)
+			 (message (concat "Deleting database: " db-name))
+			 (delete-file db-name)
+			 ))))
+	  ellocate-scan-dirs)))
 
 (defun ellocate-cache-dir (list)
   "Caches directory in LIST to database also in LIST."
