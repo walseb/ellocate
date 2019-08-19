@@ -11,7 +11,7 @@ Ellocate is a re-implementation of locate written in Emacs-Lisp. It supports all
 | Switch search databases used depending on current directory | Yes        | With a lot of effort                                      | N/A                                          |
 | Works the same on every platform                            | Yes        | No (Some systems use mlocate while others use GNU locate) | Yes                                          |
 | Dependencies                                                | Find       | mlocate or GNU locate                                     | Find                                         |
-| Tramp support                                               | I think so | Yes                                                       | Yes                                          |
+| Tramp support                                               | I think so | No                                                       | Yes                                          |
 
 #+html: <img src="preview.png" alt="Ellocate search"/>
 
@@ -33,3 +33,7 @@ By default =ellocate= only searches all directories below the current directory.
 Where the first element in all of the lists inside =ellocate-scan-dirs= is the base directory to scan and the second is in which file to store the search results so that =ellocate= can read read it if Emacs is restarted to give =ellocate= faster initial startup times. If the database is nil, =ellocate= will have to re-scan the directory if run every time Emacs is restarted instead of just reading a database containing the scanned files.
 
 =ellocate-clear= clears the cache corresponding to your current directory and =ellocate-clear= clears all defined caches. These both forces =ellocate= to refresh its search entries. Do this if your file-system has changed and you want that change reflected in =ellocate=.
+
+* Q&A
+** Why not just use locate but with one huge database containing everything?
+Let's say you have a 2 TB HDD mounted in =/dev/hdd= that you occasionally want to search through, but right now you want to find something new in =/home/user= but to do that you have to generate a new locate search database which means it has to search through everything inside =/dev/hdd= and that will probably take like 30 minutes if it's full of files. With ellocate on the other hand you can selectively delete and reconstruct the search database corresponding to =/home/user=. You also have a lot more options like you can tell ellocate to not save the database you build from =/dev/hdd= to disk, so that on restart you automatically re-scan it. I think you should also be able to create search databases over ssh connections, which is impossible with locate unless you mount the ssh computer as a drive.
