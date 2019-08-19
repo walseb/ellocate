@@ -79,6 +79,7 @@ Run this if your file system has changed and you want ellocate to find your new 
 	    (delete-file (nth 1 list))))
 	ellocate-scan-dirs))
 
+;;;###autoload
 (defun ellocate-clear (&optional ignore-scope)
   "Clears the cache corresponding to your current directory.
 If IGNORE-SCOPE is non-nil, clear all caches instead of just the cache
