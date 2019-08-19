@@ -9,7 +9,7 @@ Ellocate is a re-implementation of locate written in Emacs-Lisp. It supports all
 | Speed                                                       | Fast       | Fast                                                      | Slow                                         |
 | Easy to configure multiple search paths                     | Yes        | No                                                        | Yes (always searches down current directory) |
 | Switch search databases used depending on current directory | Yes        | With a lot of effort                                      | N/A                                          |
-| Works the same on every platform                            | Yes        | No (Some systems use mlocate while others use GNU locate) | Yes                                          |
+| Works the same on every platform that has the dependencies                            | Yes        | No (Some systems use mlocate while others use GNU locate) | Yes                                          |
 | Dependencies                                                | Find       | mlocate or GNU locate                                     | Find                                         |
 | Tramp support                                               | I think so | No                                                       | Yes                                          |
 
