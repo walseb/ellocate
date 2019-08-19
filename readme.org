@@ -35,5 +35,5 @@ Where the first element in all of the lists inside =ellocate-scan-dirs= is the b
 =ellocate-clear= clears the cache corresponding to your current directory and =ellocate-clear= clears all defined caches. These both forces =ellocate= to refresh its search entries. Do this if your file-system has changed and you want that change reflected in =ellocate=.
 
 * Q&A
-** Why not just use locate but with one huge database containing everything?
+** Why not just use locate with one huge database containing everything?
 Let's say you have a 2 TB HDD mounted in =/dev/hdd= that you occasionally want to search through, but right now you want to find something new in =/home/user= but to do that you have to generate a new locate search database which means it has to search through everything inside =/dev/hdd= and that will probably take like 30 minutes if it's full of files. With ellocate on the other hand you can selectively delete and reconstruct the search database corresponding to =/home/user=. You also have a lot more options like you can tell ellocate to not save the database you build from =/dev/hdd= to disk, so that on restart you automatically re-scan it. I think you should also be able to create search databases over ssh connections, which is impossible with locate unless you mount the ssh computer as a drive.
