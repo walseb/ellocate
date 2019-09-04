@@ -32,7 +32,7 @@ By default =ellocate= only searches all directories below the current directory.
 #+END_SRC
 Where the first element in all of the lists inside =ellocate-scan-dirs= is the base directory to scan and the second is in which file to store the search results so that =ellocate= can read read it if Emacs is restarted to give =ellocate= faster initial startup times. If the database is nil, =ellocate= will have to re-scan the directory if run every time Emacs is restarted instead of just reading a database containing the scanned files.
 
-=ellocate-clear= clears the cache corresponding to your current directory and =ellocate-clear= clears all defined caches. These both forces =ellocate= to refresh its search entries. Do this if your file-system has changed and you want that change reflected in =ellocate=.
+=ellocate-clear= clears the cache corresponding to your current directory and =ellocate-clear-all= clears all defined caches. These both forces =ellocate= to refresh its search entries. Do this if your file-system has changed and you want that change reflected in =ellocate=.
 
 * Q&A
 ** Why not just use locate with one huge database containing everything?
