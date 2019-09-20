@@ -105,10 +105,9 @@ Run this function if your file system has changed and you want `ellocate' to fin
     (mapc (lambda (list)
 	    (let* ((path-name (nth 0 list))
 		   (db-name (nth 1 list)))
-	      (when (and db-name (file-in-directory-p default-directory path-name)
-			 (message (concat "Deleting database: " db-name))
-			 (delete-file db-name)
-			 ))))
+	      (when (and db-name (file-in-directory-p default-directory path-name))
+		(message (concat "Deleting database: " db-name))
+		(delete-file db-name))))
 	  ellocate-scan-dirs)))
 
 (defun ellocate-cache-dir (list)
