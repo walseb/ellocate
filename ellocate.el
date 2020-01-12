@@ -154,7 +154,8 @@ file under the current directory."
 			ellocate-scan-dirs)))
 	(if found-dir
 	    (ellocate-cache-dir found-dir)
-	  (message "Could not search: the current directory is outside of any directories listed in ellocate-scan-dirs")))
+	  (when (fboundp 'counsel-file-jump)
+	    (counsel-file-jump))))
       ;; Re-run ellocate on the newly found files
       (ellocate))))
 
